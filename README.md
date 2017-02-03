@@ -1,0 +1,1 @@
+# photoshop-sprite-sheet-from-coordinates
