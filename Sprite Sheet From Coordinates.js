@@ -1,5 +1,5 @@
 #target photoshop
-#include "includes/underscore.jsinc"
+#include "includes/underscore.inc"
 
 app.preferences.rulerUnits = Units.PIXELS;
 
