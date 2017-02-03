@@ -23,11 +23,9 @@ _.each(flattenedLayers, function (layer) {
 // Map layers using recursion.
 function mapLayersWithDepth(layers, depth) {
     return _.union(_.toArray(layers), _.map(layers, function (layer) {
-        if (depth > 0) {
-            return mapLayersWithDepth(_.toArray(layer.layers), depth - 1);
-        } else {
-            return _.toArray(layer.layers);
-        }
+        return depth > 0
+            ? mapLayersWithDepth(_.toArray(layer.layers), depth - 1)
+            : _.toArray(layer.layers);
     }));
 }
 
@@ -68,9 +66,5 @@ function updateCanvasHeight(requiredHeight) {
 
 // Set layer to visible, unless it has (hidden) in name.
 function setLayerVisibility(layer) {
-    if (! layer.name.match(/\(hidden\)/)) {
-        layer.visible = 1;
-    } else {
-        layer.visible = 0;
-    }
+    layer.visible = layer.name.match(/\(hidden\)/) ? 0 : 1;
 }
