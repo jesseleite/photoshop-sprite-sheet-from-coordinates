@@ -8,21 +8,20 @@ var document = activeDocument;
 var activeLayer = document.activeLayer;
 var spriteWidth = document.width;
 var spriteHeight = document.height;
-var layerDepth = 25;
-var flattenedLayers = flattenLayersWithDepth(document.layers, layerDepth);
+var recursionDepth = 25;
+var flattenedLayers = flattenLayersWithDepth(document.layers, recursionDepth);
 
-document.resizeCanvas(5*spriteWidth, 5*spriteHeight, AnchorPosition.TOPLEFT);
-
-_.each(getLayersWithCoordinates(flattenedLayers), function (layer) {
-    translateX = (layer.name.substring(0, 1) - 1) * spriteWidth;
-    translateY = (layer.name.substring(2, 3) - 1) * spriteHeight;
-    layer.translate(translateX, translateY);
+// Move layers with coordinates.
+_.each(filterLayersWithCoordinates(flattenedLayers), function (layer) {
+    resizeCanvasAndMoveLayer(layer);
 });
 
+// Make all layers visible.
 _.each(flattenedLayers, function (layer) {
     layer.visible = 1;
 });
 
+// Map layers using recursion.
 function mapLayersWithDepth(layers, depth) {
     return _.union(_.toArray(layers), _.map(layers, function (layer) {
         if (depth > 0) {
@@ -33,12 +32,37 @@ function mapLayersWithDepth(layers, depth) {
     }));
 }
 
+// Map layers using recursion and flatten.
 function flattenLayersWithDepth(layers, depth) {
     return _.flatten(mapLayersWithDepth(layers, depth));
 }
 
-function getLayersWithCoordinates(layers) {
+// Filter layers with coordinates in name.
+function filterLayersWithCoordinates(layers) {
     return _.filter(flattenedLayers, function (layer) {
         return layer.name.match(/[0-9],[0-9]/);
     });
+}
+
+// Resize canvas and move layer.
+function resizeCanvasAndMoveLayer(layer) {
+    translateX = (layer.name.substring(0, 1) - 1) * spriteWidth;
+    translateY = (layer.name.substring(2, 3) - 1) * spriteHeight;
+    updateCanvasWidth(translateX + spriteWidth);
+    updateCanvasHeight(translateY + spriteHeight);
+    layer.translate(translateX, translateY);
+}
+
+// Update canvas width if necessary.
+function updateCanvasWidth(requiredWidth) {
+    if (document.width < requiredWidth) {
+        document.resizeCanvas(requiredWidth, document.height, AnchorPosition.TOPLEFT);
+    }
+}
+
+// Update canvas height if necessary.
+function updateCanvasHeight(requiredHeight) {
+    if (document.height < requiredHeight) {
+        document.resizeCanvas(document.width, requiredHeight, AnchorPosition.TOPLEFT);
+    }
 }
