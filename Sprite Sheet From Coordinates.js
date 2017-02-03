@@ -1,3 +1,7 @@
+// Sprite Sheet From Coordinates Photoshop Script
+// Author: Jesse Leite
+// Version: 1.0
+
 #target photoshop
 #include "includes/underscore.inc"
 
@@ -47,6 +51,7 @@ function resizeCanvasAndMoveLayer(layer) {
     translateY = (layer.name.substring(2, 3) - 1) * spriteHeight;
     updateCanvasWidth(translateX + spriteWidth);
     updateCanvasHeight(translateY + spriteHeight);
+    layer.visible = 1;
     layer.translate(translateX, translateY);
 }
 
