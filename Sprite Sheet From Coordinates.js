@@ -1,5 +1,4 @@
 #target photoshop
-
 #include "includes/underscore.jsinc"
 
 app.preferences.rulerUnits = Units.PIXELS;
@@ -18,7 +17,7 @@ _.each(filterLayersWithCoordinates(flattenedLayers), function (layer) {
 
 // Make all layers visible.
 _.each(flattenedLayers, function (layer) {
-    layer.visible = 1;
+    setLayerVisibility(layer);
 });
 
 // Map layers using recursion.
@@ -64,5 +63,14 @@ function updateCanvasWidth(requiredWidth) {
 function updateCanvasHeight(requiredHeight) {
     if (document.height < requiredHeight) {
         document.resizeCanvas(document.width, requiredHeight, AnchorPosition.TOPLEFT);
+    }
+}
+
+// Set layer to visible, unless it has (hidden) in name.
+function setLayerVisibility(layer) {
+    if (! layer.name.match(/\(hidden\)/)) {
+        layer.visible = 1;
+    } else {
+        layer.visible = 0;
     }
 }
