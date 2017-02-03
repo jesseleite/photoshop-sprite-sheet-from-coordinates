@@ -1,1 +1,3 @@
-# photoshop-sprite-sheet-from-coordinates
+# Sprite Sheet From Coordinates
+
+![demo](images/demo.gif)
